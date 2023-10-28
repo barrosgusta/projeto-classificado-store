@@ -7,8 +7,6 @@ import { Urbanist } from 'next/font/google'
 import ModalProvider from '@/providers/modal-provider'
 import ToastProvider from '@/providers/toast-provider'
 import { ThemeProvider } from '@/providers/theme-provider'
-import { AnimatePresence } from 'framer-motion'
-import MobileNavbar from '@/components/navbar/mobile-navbar'
 
 const font = Urbanist({ subsets: ['latin'] })
 

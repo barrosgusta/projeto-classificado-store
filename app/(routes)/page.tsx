@@ -1,8 +1,5 @@
 import { getAds } from "@/actions/get-ads";
-import getProducts from "@/actions/get-products";
-import Billboard from "@/components/billboard";
 import AdList from "@/components/ui/ad-list";
-import ProductList from "@/components/ui/ad-list";
 import Container from "@/components/ui/container";
 
 // Opt out of caching for all data requests in the route segment
