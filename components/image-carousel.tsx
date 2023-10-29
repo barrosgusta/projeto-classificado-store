@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils"
 import { ArrowLeft, ArrowRight, Expand } from "lucide-react"
 import NextImage from "next/image"
-import { MouseEventHandler, useEffect, useState } from "react"
+import { MouseEventHandler, useState } from "react"
 import IconButton from "./ui/icon-button"
 import usePreviewModal from "@/hooks/use-preview-modal"
 

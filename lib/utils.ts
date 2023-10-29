@@ -32,3 +32,15 @@ export function getAdBrandName(ad: CarAd): string {
 
   return brandName
 }
+
+export function getAdYear(ad: CarAd): string {
+  let year = ""
+
+  if (ad.year !== undefined && ad.year !== null) {
+    year = ad.year!.name
+  } else if (ad.customYear !== undefined) {
+    year = ad.customYear!
+  }
+
+  return year
+}

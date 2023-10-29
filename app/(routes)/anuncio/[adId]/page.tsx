@@ -26,7 +26,7 @@ export default async function AdPage({ params }: AdPageProps) {
     }
 
     let fipePrice = -1;
-    if (ad.yearId !== null && ad.yearId !== undefined) {
+    if (ad.yearId) {
         const fipePriceResponse = await fetch(`https://parallelum.com.br/fipe/api/v1/carros/marcas/${ad.brand?.id}/modelos/${ad.model?.id}/anos/${ad.year?.id}`, { method: "GET", next : { revalidate: fipeRevalidate } });
         const fipePriceData = await fipePriceResponse.json();
         fipePrice = fipePriceData.Valor;
