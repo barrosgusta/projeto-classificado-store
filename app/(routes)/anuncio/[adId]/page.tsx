@@ -33,7 +33,7 @@ export default async function AdPage({ params }: AdPageProps) {
     }
 
     return (
-        <div className="relative pt-52 md:pt-96">
+        <div className="relative pt-72 md:pt-96">
             <div className="absolute top-0 w-full">
                 <div className="flex justify-center w-full">
                     <ImageCarousel data={ad} />
