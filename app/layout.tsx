@@ -7,6 +7,7 @@ import { Urbanist } from 'next/font/google'
 import ModalProvider from '@/providers/modal-provider'
 import ToastProvider from '@/providers/toast-provider'
 import { ThemeProvider } from '@/providers/theme-provider'
+import Script from 'next/script'
 
 const font = Urbanist({ subsets: ['latin'] })
 
@@ -25,6 +26,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Script
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6917025455716510"
+        crossOrigin="anonymous"
+        async
+      />
       <body className={font.className}>
         <ThemeProvider
             attribute="class"

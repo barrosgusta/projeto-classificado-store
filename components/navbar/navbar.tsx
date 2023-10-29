@@ -16,7 +16,7 @@ export default async function Navbar({ className }: NavbarProps) {
                         <p className="font-bold text-xl">Projeto Classificado</p>
                     </Link>
                     {/* <MainNav data={categories} /> */}
-                    <NavbarActions frontEndUrl={process.env.NEXT_PUBLIC_FRONTEND_URL!} />
+                    <NavbarActions frontEndUrl={process.env.NEXT_PUBLIC_ADMIN_URL!} />
                 </div>
             </Container>
         </nav>
