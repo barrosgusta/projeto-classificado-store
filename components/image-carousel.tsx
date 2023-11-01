@@ -29,12 +29,12 @@ export default function ImageCarousel({ data, className }: ImageCarouselProps) {
     })
 
     let imageWidth = windowWidth;
-    let translateStep = 25;
+    let translateStep = 100 / data.images.length;
     let infiniteLoopLimit = 1;
 
     if (windowWidth > 1024 && data.images.length >= 3) {
         imageWidth /= 3;
-        translateStep = 25;
+        translateStep = 100 / data.images.length;
         infiniteLoopLimit = 3;
     }
 
