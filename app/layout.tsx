@@ -13,7 +13,7 @@ const font = Urbanist({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Projeto Classificado',
-  description: 'Projeto Classificado',
+  description: 'Uma exposição online para entusiastas de carros.',
 }
 
 // Opt out of caching for all data requests in the route segment
