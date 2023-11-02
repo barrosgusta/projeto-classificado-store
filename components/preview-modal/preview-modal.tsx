@@ -57,11 +57,11 @@ export default function PreviewImagesModal() {
                                                     <div 
                                                         className="
                                                             group relative
-                                                            inset-0 overflow-hidden rounded-2xl border
+                                                            inset-0 overflow-hidden rounded-2xl border backdrop-blur-3xl bg-black/75
                                                             w-[400px] h-[250px]
                                                             sm:w-[550px] sm:h-[350px]
-                                                            md:w-[700px] md:h-[500px]
-                                                            lg:w-[1024px] lg:h-[720px]                                                            
+                                                            md:w-[700px] md:h-[525px]
+                                                            lg:w-[912px] lg:h-[684px]                                                            
                                                         "
                                                     >
                                                         
@@ -69,7 +69,7 @@ export default function PreviewImagesModal() {
                                                             fill
                                                             src={image.url}
                                                             alt="Imagem"
-                                                            className="object-cover object-center transition duration-300 ease-in-out group-hover:scale-105"
+                                                            className="object-contain object-center transition duration-300 ease-in-out group-hover:scale-105"
                                                         />
                                                         <IconButton 
                                                             icon={<ImageIcon size={20} />}
@@ -85,13 +85,13 @@ export default function PreviewImagesModal() {
                                         </div>                                    
                                     </div>
                                 </Dialog.Panel>
-                                <div className="fixed h-fit bottom-0 overflow-y-auto w-full translate-y-10 md:translate-y-6">
+                                <div className="fixed h-fit bottom-0 overflow-y-auto w-full translate-y-10 md:translate-y-4">
                                     <div className="flex items-center justify-center">
                                         <Dialog.Panel>
                                             <ScrollArea className="w-full max-w-sm md:max-w-3xl rounded-lg border backdrop-blur-xl bg-white/75 dark:bg-black/75 p-0">
                                                 <Tab.List className="grid grid-flow-col justify-evenly gap-4 md:gap-8 p-3 md:p-5">
                                                     {ad.images.map((image) => (
-                                                        <GalleyTab className="h-[45px] lg:h-[50px] xl:h-[70px]"  key={image.id} image={image} />
+                                                        <GalleyTab className="h-[45px] lg:h-[50px]"  key={image.id} image={image} />
                                                     ))}
                                                 </Tab.List>
                                                 <ScrollBar orientation="horizontal" />
