@@ -9,7 +9,7 @@ export function getNumbersFromString(value: string): number {
   return parseInt(value.replace(/\D/g, ""))
 }
 
-export function getAdModelName(ad: CarAd): string {
+export function getListingModelName(ad: CarAd): string {
   let modelName = ""
 
   if (ad.model !== undefined && ad.model !== null) {
@@ -21,7 +21,7 @@ export function getAdModelName(ad: CarAd): string {
   return modelName
 }
 
-export function getAdBrandName(ad: CarAd): string {
+export function getListingBrandName(ad: CarAd): string {
   let brandName = ""
 
   if (ad.brand !== undefined && ad.brand !== null) {
@@ -33,7 +33,7 @@ export function getAdBrandName(ad: CarAd): string {
   return brandName
 }
 
-export function getAdYear(ad: CarAd): string {
+export function getListingYear(ad: CarAd): string {
   let year = ""
 
   if (ad.year !== undefined && ad.year !== null) {

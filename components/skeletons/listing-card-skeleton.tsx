@@ -2,7 +2,7 @@ import { Cpu, GaugeCircle, MapPin } from "lucide-react";
 import Gearshift from "../icons/gearshift";
 import { Separator } from "../ui/separator";
 
-export default async function AdCardSkeleton() {
+export default async function ListingCardSkeleton() {
     return (
         <div className="relative group rounded-xl border overflow-hidden bg-zinc-100 dark:bg-zinc-900 shadow-sm"> 
             <div className="aspect-[4/3] min-h-fit min-w-fit rounded-xl bg-zinc-300 dark:bg-zinc-600 relative animate-pulse shadow-sm" />
