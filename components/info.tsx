@@ -5,7 +5,7 @@ import { getNumbersFromString } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import Fuelpump from "./icons/fuel";
 import Gearshift from "./icons/gearshift";
-import { Cpu, GaugeCircle, MapPin, TimerIcon, User } from "lucide-react";
+import { Calendar, Cpu, GaugeCircle, MapPin, TimerIcon, User } from "lucide-react";
 import Turbo from "./icons/turbo";
 import { Button } from "./ui/button";
 import { handleClientScriptLoad } from "next/script";
@@ -50,56 +50,56 @@ export default function Info({ data, fipePrice }: InfoProps) {
             <div className="flex flex-col items-center gap-y-6">
                 <div className="w-full flex items-center justify-center bg-white/40 dark:bg-zinc-900 rounded-lg p-5 shadow-sm border border-zinc-300 dark:border-zinc-800 text-center">
                     <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner p-3 border">
+                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner bg-white dark:bg-zinc-950 p-3 border">
                             {/* <h3 className="font-semibold">KM:</h3> */}
                             <GaugeCircle size={20} className="text-zinc-600 dark:text-zinc-400" />
                             <div className="text-xs md:text-sm">
                                 {data?.kms} km
                             </div>
                         </div>
-                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner p-3 border">
+                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner bg-white dark:bg-zinc-950 p-3 border">
                             {/* <h3 className="font-semibold">Câmbio:</h3> */}
                             <Gearshift size={20} className="fill-zinc-600 dark:fill-zinc-400" />
                             <div className="text-xs md:text-sm">
                                 {data?.gearboxType.name}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner p-3 border">
+                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner bg-white dark:bg-zinc-950 p-3 border">
                             {/* <h3 className="font-semibold">Combustível:</h3> */}
                             <Fuelpump size={20} className="fill-zinc-600 dark:fill-zinc-400" />
                             <div className="text-xs md:text-sm">
                                 {data?.fuelType.name}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner p-3 border">
+                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner bg-white dark:bg-zinc-950 p-3 border">
                             {/* <h3 className="font-semibold">Ano:</h3> */}
-                            <TimerIcon size={20} className="text-zinc-600 dark:text-zinc-400" />
+                            <Calendar size={20} className="text-zinc-600 dark:text-zinc-400" />
                             <div className="text-xs md:text-sm">
                                 {data?.year?.name ? getNumbersFromString(data?.year?.name) : data.customYear}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner p-3 border">
+                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner bg-white dark:bg-zinc-950 p-3 border">
                             {/* <h3 className="font-semibold">Local:</h3> */}
                             <MapPin size={20} className="text-zinc-600 dark:text-zinc-400" />
                             <div className="text-xs md:text-sm">
                                 {data?.city?.name} {data?.state?.acronym}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner p-3 border">
+                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner bg-white dark:bg-zinc-950 p-3 border">
                             {/* <h3 className="font-semibold">Preparação:</h3> */}
                             <Cpu size={20} className="text-zinc-600 dark:text-zinc-400" />
                             <div className="text-xs md:text-sm">
                                 {data?.engineTuning.name}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner p-3 border">
+                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner bg-white dark:bg-zinc-950 p-3 border">
                             {/* <h3 className="font-semibold">Indução:</h3> */}
                             <Turbo size={20} className="fill-zinc-600 dark:fill-zinc-400" />
                             <div className="text-xs md:text-sm">
                                 {data?.inductionType.name}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner p-3 border">
+                        <div className="flex flex-col items-center justify-center rounded-md shadow-inner bg-white dark:bg-zinc-950 p-3 border">
                             {/* <h3 className="font-semibold">Vendedor:</h3> */}
                             <User size={20} className="text-zinc-600 dark:text-zinc-400" />
                             <div className="text-xs md:text-sm">
