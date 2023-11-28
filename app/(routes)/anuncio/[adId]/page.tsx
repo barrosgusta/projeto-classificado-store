@@ -1,10 +1,9 @@
-import getAd from "@/actions/get-ad";
+import getAd from "@/actions/get-listing";
 import FormattedMarkdown from "@/components/formatted-markdown";
 import ImageCarousel from "@/components/image-carousel";
 import Info from "@/components/info";
 import Container from "@/components/ui/container";
 import "./styles.css"
-// import axios from "axios";
 
 
 type AdPageProps = {
@@ -20,7 +19,6 @@ export default async function AdPage({ params }: AdPageProps) {
     
     try {
         await fetch(`${process.env.NEXT_PUBLIC_API_URL!}/anuncios/${params.adId}/access`, { method: "PUT", next : { revalidate: accessRevalidate } });
-        // await axios.put(`${process.env.NEXT_PUBLIC_API_URL!}/anuncios/${params.adId}/access`, "", { next: { revalidate: 3600 } });
     } catch (error) {
         console.log(error);
     }
@@ -38,13 +36,13 @@ export default async function AdPage({ params }: AdPageProps) {
                 <div className="flex justify-center w-full">
                     <ImageCarousel data={ad} />
                 </div>
-                <div className="hidden lg:block gradient-blur top-0 translate-y-36 h-[500px]">
+                <div className="hidden lg:block gradient-blur top-0 translate-y-60 h-[600px]">
                     <div></div>
                     <div></div>
                     <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                    {/* <div></div> */}
+                    {/* <div></div> */}
+                    {/* <div></div> */}
                 </div>
                 {/* <Gallery images={ad.images}/> */}
             </div>
