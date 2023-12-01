@@ -8,14 +8,14 @@ import Currency from "@/components/ui/currency";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler } from "react";
 import usePreviewModal from "@/hooks/use-preview-modal";
-import { Separator } from "./separator";
+import { Separator } from "../ui/separator";
 import Gearshift from "../icons/gearshift";
 
-type AdCardProps = {
+type ListingCardProps = {
     data: CarAd;
 }
 
-export default function AdCard({ data }: AdCardProps) {
+export default function ListingCard({ data }: ListingCardProps) {
     const previewModal = usePreviewModal();
     const router = useRouter();
 
