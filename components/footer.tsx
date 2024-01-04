@@ -6,7 +6,7 @@ export default function Footer() {
             <Link className="justify-self-end hidden md:block z-10 text-blue-500 hover:opacity-70" replace passHref href="/suporte">SUPORTE</Link>
             <div className="md:absolute right-0 left-0 z-0">
                 <p className="text-center text-black dark:text-white">
-                    &copy; 2023 Projeto Classificado. Todos os direitos reservados.
+                    &copy; 2024 Projeto Classificado. Todos os direitos reservados.
                 </p>
             </div>
             <Link 
