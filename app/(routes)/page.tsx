@@ -1,25 +1,32 @@
-import ListingListSkeleton from "@/components/skeletons/listing-list-skeleton";
-import Container from "@/components/ui/container";
-import { Suspense } from "react";
-import FeaturedListingsList from "./components/featured-listings-list";
+import ListingListSkeleton from "@/components/skeletons/listing-list-skeleton"
+import Container from "@/components/ui/container"
+import { Suspense } from "react"
+import FeaturedListingsList from "./components/featured-listings-list"
+import HeroSection from "@/components/hero-section"
 
-// Opt out of caching for all data requests in the route segment
-export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic"
 
 export default async function HomePage({
-    searchParams,
+  searchParams,
 }: {
-    searchParams: { [key: string]: string | string[] | string[][] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-    return (
-        <Container>
-            <div className="space-y-10 pb-10 pt-5 min-h-[calc(100svh-4rem)]">
-                <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
-                    <Suspense fallback={<ListingListSkeleton title="Anúncios em destaque" />}>
-                        <FeaturedListingsList searchParams={searchParams} />
-                    </Suspense>  
-                </div>
-            </div>
-        </Container>
-    )
+  const params = await searchParams
+
+  return (
+    <Container>
+      <div className="space-y-0 pb-10 pt-0 min-h-[calc(100svh-4rem)]">
+        <HeroSection />
+        <div className="flex flex-col gap-y-12 px-4 sm:px-6 lg:px-8 py-12">
+          <Suspense
+            fallback={
+              <ListingListSkeleton title="Showroom" />
+            }
+          >
+            <FeaturedListingsList searchParams={params} />
+          </Suspense>
+        </div>
+      </div>
+    </Container>
+  )
 }

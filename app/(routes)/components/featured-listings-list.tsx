@@ -1,50 +1,29 @@
-import getListings from "@/actions/get-listings";
-import ListingList from "@/components/listing/listing-list";
-import { getListingBrandName, getListingModelName } from "@/lib/utils";
+import getListings from "@/actions/get-listings"
+import ListingList from "@/components/listing/listing-list"
+import { parseSearchParams } from "@/lib/search-params"
 
 export default async function FeaturedListingsList({
-    searchParams,
+  searchParams,
 }: {
-    searchParams: { [key: string]: string | string[] | string[][] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined }
 }) {
-    const listings = await getListings();
+  const { page, per_page, brand, state, city } = parseSearchParams(searchParams)
 
-    // Pagination
-    const page = searchParams["page"] ?? 1;
-    const per_page = searchParams["per_page"] ?? 12; 
+  // Fetch only the current page from the API with all active filters
+  const listings = await getListings({ brand, state, city, page, per_page })
 
-    // Filters
-    const brand = searchParams["brand"] ?? "";
-    const model = searchParams["model"] ?? "";
-    const state = searchParams["state"] ?? "";
-    const city = searchParams["city"] ?? "";
+  // Since API returns only the current page, pagination is simpler
+  // hasNextPage = we got a full page (might have more)
+  // hasPreviousPage = we're not on page 1
+  const hasNextPage = listings.length === per_page
+  const hasPreviousPage = page > 1
 
-
-    const filteredListings = listings.filter((listing) => {
-        if (brand) {
-            return getListingBrandName(listing).toLowerCase().includes(brand.toString().toLowerCase());
-        } else if (model) {
-            return getListingModelName(listing).toLowerCase().includes(model.toString().toLowerCase());
-        } else if (state) {
-            return listing.state.name.toLowerCase().includes(state.toString().toLowerCase());
-        } else if (city) {
-            return listing.city.name.toLowerCase().includes(city.toString().toLowerCase());
-        } else {
-            return true;
-        }
-    });
-
-    const start = (Number(page) - 1) * Number(per_page);
-    const end = Number(page) * Number(per_page);
-
-    const currentListings = filteredListings.slice(start,end);
-
-    return (
-        <ListingList 
-            title="Anúncios em destaque" 
-            items={currentListings}
-            hasNextPage={end < filteredListings.length}
-            hasPreviousPage={start > 0}
-        />
-    )
+  return (
+    <ListingList
+      title="Showroom"
+      items={listings}
+      hasNextPage={hasNextPage}
+      hasPreviousPage={hasPreviousPage}
+    />
+  )
 }
