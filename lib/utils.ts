@@ -1,6 +1,7 @@
-import { type ClassValue, clsx } from "clsx"
+import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
- 
+import type { CarAd } from "@/types"
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -10,37 +11,28 @@ export function getNumbersFromString(value: string): number {
 }
 
 export function getListingModelName(ad: CarAd): string {
-  let modelName = ""
-
   if (ad.model !== undefined && ad.model !== null) {
-    modelName = ad.model!.name
-  } else if (ad.customModel !== undefined) {
-    modelName = ad.customModel!
+    return ad.model.name
+  } else if (ad.customModel !== undefined && ad.customModel !== null) {
+    return ad.customModel
   }
-
-  return modelName
+  return ""
 }
 
 export function getListingBrandName(ad: CarAd): string {
-  let brandName = ""
-
   if (ad.brand !== undefined && ad.brand !== null) {
-    brandName = ad.brand!.name
-  } else if (ad.customBrand !== undefined) {
-    brandName = ad.customBrand!
+    return ad.brand.name
+  } else if (ad.customBrand !== undefined && ad.customBrand !== null) {
+    return ad.customBrand
   }
-
-  return brandName
+  return ""
 }
 
 export function getListingYear(ad: CarAd): string {
-  let year = ""
-
   if (ad.year !== undefined && ad.year !== null) {
-    year = ad.year!.name
-  } else if (ad.customYear !== undefined) {
-    year = ad.customYear!
+    return ad.year.name
+  } else if (ad.customYear !== undefined && ad.customYear !== null) {
+    return ad.customYear
   }
-
-  return year
+  return ""
 }
