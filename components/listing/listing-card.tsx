@@ -1,108 +1,148 @@
 "use client"
 
-import Image from "next/image";
-import { Cpu, Expand, GaugeCircle, MapPin } from "lucide-react";
+import Image from "next/image"
+import { Expand, GaugeCircle, MapPin } from "lucide-react"
+import { motion, useMotionValue, useSpring, useMotionTemplate } from "motion/react"
 
-import IconButton from "@/components/ui/icon-button";
-import Currency from "@/components/ui/currency";
-import { useRouter } from "next/navigation";
-import { MouseEventHandler } from "react";
-import usePreviewModal from "@/hooks/use-preview-modal";
-import { Separator } from "../ui/separator";
-import Gearshift from "../icons/gearshift";
+import IconButton from "@/components/ui/icon-button"
+import Currency from "@/components/ui/currency"
+import { useRouter } from "next/navigation"
+import type { MouseEventHandler } from "react"
+import usePreviewModal from "@/hooks/use-preview-modal"
+import Gearshift from "../icons/gearshift"
+import type { CarAd } from "@/types"
 
 type ListingCardProps = {
-    data: CarAd;
+  data: CarAd
+  index?: number
 }
 
-export default function ListingCard({ data }: ListingCardProps) {
-    const previewModal = usePreviewModal();
-    const router = useRouter();
+export default function ListingCard({ data, index = 0 }: ListingCardProps) {
+  const previewModal = usePreviewModal()
+  const router = useRouter()
 
-    const handleClick = () => {
-         router.push(`/anuncio/${data.id}`);
-    }
+  const mouseX = useMotionValue(-999)
+  const mouseY = useMotionValue(-999)
+  const springX = useSpring(mouseX, { stiffness: 300, damping: 30 })
+  const springY = useSpring(mouseY, { stiffness: 300, damping: 30 })
+  const spotlight = useMotionTemplate`radial-gradient(circle 160px at ${springX}px ${springY}px, rgba(255,255,255,0.08), transparent 80%)`
 
-    const onPreview:MouseEventHandler<HTMLButtonElement> = (e) => {
-        e.stopPropagation();
-        
-        previewModal.onOpen(data);
-    }
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    mouseX.set(e.clientX - rect.left)
+    mouseY.set(e.clientY - rect.top)
+  }
 
-    const isRecentListing = (date: Date): boolean => {
-        const now = new Date();
-        const diff = now.getTime() - date.getTime();
-        const diffInDays = diff / (1000 * 3600 * 24);
+  const handleMouseLeave = () => {
+    mouseX.set(-999)
+    mouseY.set(-999)
+  }
 
-        return diffInDays < 3;
-    }
+  const handleClick = () => {
+    router.push(`/anuncio/${data.id}`)
+  }
 
-    const brand = data?.brand?.name || data.customBrand;
-    const model = data?.model?.name || data.customModel;
+  const onPreview: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation()
+    previewModal.onOpen(data)
+  }
 
-    return (
-        <div onClick={handleClick} className="relative group cursor-pointer rounded-xl border overflow-hidden bg-zinc-100 dark:bg-zinc-900 shadow-sm duration-300 md:hover:scale-105 md:hover:shadow-xl"> 
-            <div className="aspect-[4/3] min-h-fit min-w-fit rounded-xl bg-grey-100 relative">
-                <Image
-                    src={data?.images?.[0]?.url}
-                    fill
-                    alt="Image"
-                    className="aspect-[4/3] object-cover rounded-xl shadow-md"
-                />
-                {isRecentListing(new Date(data?.createdAt)) && (
-                    <div className="backdrop-blur-sm px-2 py-1 rounded-bl-xl border-l border-b border-red-900 bg-red-500/95 absolute top-0 right-0 uppercase shadow-md">
-                        <p className="text-white text-xs font-semibold drop-shadow-md">Recém anunciado</p>
-                    </div>
-                )}
-                <div className="opacity-0 group-hover:opacity-100 transition absolute w-full px-6 bottom-5">
-                    <div className="flex gap-x-6 justify-center">
-                        <IconButton 
-                            onClick={onPreview}
-                            icon={<Expand size={20} className="text-zinc-600 dark:text-zinc-300" />}
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="p-4 rounded-b-xl bg-white dark:bg-black mb-8 shadow-sm">
-                <div>
-                    <p className="font-semibold truncate uppercase">
-                        {model}
-                    </p>
-                    <p className="text-xs text-gray-500 uppercase">
-                        {brand}
-                    </p>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-col space-y-2">
-                    <div className="flex items-center justify-between">
-                        <Currency value={data?.price} />
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <GaugeCircle size={15} className="text-zinc-600 dark:text-zinc-400" />
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                            {data?.kms} km
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <Gearshift size={15} className="fill-zinc-600 dark:fill-zinc-400" />
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                            {data?.gearboxType.name}
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <Cpu size={15} className="text-zinc-600 dark:text-zinc-400 " />
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                            {data?.engineTuning.name}
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div className="absolute bottom-0 left-0 w-full pb-2">
-                <div className="flex gap-1 items-center justify-center text-xs">
-                    <MapPin size={15} />
-                    {data?.city?.name} - {data?.state?.name}
-                </div>
-            </div>
+  const isRecentListing = (date: Date): boolean => {
+    const now = new Date()
+    const diff = now.getTime() - date.getTime()
+    const diffInDays = diff / (1000 * 3600 * 24)
+    return diffInDays < 3
+  }
+
+  const brand = data?.brand?.name || data.customBrand
+  const model = data?.model?.name || data.customModel
+
+  return (
+    <motion.div
+      onClick={handleClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.08 }}
+      className="relative group cursor-pointer overflow-visible"
+    >
+      {/* Ambient back glow — static blurred image behind the card */}
+      <div className="absolute -inset-6 rounded-3xl opacity-40 blur-3xl saturate-200 pointer-events-none -z-10">
+        <Image
+          src={data?.images?.[0]?.url}
+          fill
+          alt=""
+          className="object-cover rounded-3xl"
+          unoptimized
+        />
+      </div>
+
+      <div className="relative z-10 rounded-2xl overflow-hidden bg-card border border-border/50 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+      <div className="aspect-[16/10] relative">
+        <Image
+          src={data?.images?.[0]?.url}
+          fill
+          alt="Image"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+        {/* Cursor spotlight */}
+        <motion.div
+          style={{ background: spotlight }}
+          className="absolute inset-0 pointer-events-none z-10"
+        />
+
+        {isRecentListing(new Date(data?.createdAt)) && (
+          <div className="backdrop-blur-md px-3 py-1 rounded-full bg-primary/90 absolute top-3 right-3 uppercase shadow-sm">
+            <p className="text-primary-foreground text-[10px] font-semibold tracking-wide">
+              Novo
+            </p>
+          </div>
+        )}
+
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute top-3 left-3">
+          <IconButton
+            onClick={onPreview}
+            icon={
+              <Expand
+                size={18}
+                className="text-foreground/70"
+              />
+            }
+          />
         </div>
-    )
+
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <div className="flex items-end justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-white font-bold text-lg leading-tight truncate uppercase">
+                {brand} {model}
+              </p>
+              <div className="flex items-center gap-2 mt-1.5">
+                <span className="inline-flex items-center gap-1 text-white/70 text-xs">
+                  <GaugeCircle size={12} />
+                  {data?.kms} km
+                </span>
+                <span className="inline-flex items-center gap-1 text-white/70 text-xs">
+                  <Gearshift size={12} className="fill-white/70" />
+                  {data?.gearboxType.name}
+                </span>
+              </div>
+            </div>
+            <div className="shrink-0 text-right">
+              <Currency value={data?.price} className="text-white font-bold text-lg" />
+            </div>
+          </div>
+          <div className="flex items-center gap-1 mt-2 text-white/50 text-xs">
+            <MapPin size={11} />
+            {data?.city?.name} - {data?.state?.name}
+          </div>
+        </div>
+      </div>
+      </div>
+    </motion.div>
+  )
 }

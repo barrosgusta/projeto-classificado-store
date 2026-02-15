@@ -1,30 +1,17 @@
-"use client"
+import { cn } from "@/lib/utils"
 
-import { useState, useEffect } from "react";
-
-type CurrencyProps = {  
-    value?: string | number;
-};
+type CurrencyProps = {
+  value?: string | number
+  className?: string
+}
 
 export function formatCurrency(value: number) {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value)
-};
-  
-export default function Currency({ value }: CurrencyProps) {
-    const [isMounted, setIsMounted] = useState(false);
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value)
+}
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    if (!isMounted) return null;
-    
-    return (
-        <div className="font-semibold">
-           {formatCurrency(Number(value))}
-        </div>
-    )
+export default function Currency({ value, className }: CurrencyProps) {
+  return <span className={cn("font-semibold", className)}>{formatCurrency(Number(value))}</span>
 }

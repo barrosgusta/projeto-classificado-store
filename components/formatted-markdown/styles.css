@@ -1,3 +1,5 @@
+@reference "../../app/globals.css";
+
 .markdown {
   @apply leading-relaxed space-y-4;
 }
@@ -105,5 +107,3 @@
 .markdown img {
   @apply rounded-xl shadow-inner;
 }
-
-
