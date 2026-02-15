@@ -1,17 +1,18 @@
-import { create } from "zustand";
+import { create } from "zustand"
+import type { CarAd } from "@/types"
 
 interface PreviewModalStore {
-    isOpen: boolean;
-    data?: CarAd;
-    onOpen: (data: CarAd) => void;
-    onClose: () => void;
-};
+  isOpen: boolean
+  data?: CarAd
+  onOpen: (data: CarAd) => void
+  onClose: () => void
+}
 
 const usePreviewModal = create<PreviewModalStore>((set) => ({
-    isOpen: false,
-    data: undefined,
-    onOpen: (data: CarAd) => set({ isOpen: true, data }),
-    onClose: () => set({ isOpen: false, data: undefined }),
-}));
+  isOpen: false,
+  data: undefined,
+  onOpen: (data: CarAd) => set({ isOpen: true, data }),
+  onClose: () => set({ isOpen: false, data: undefined }),
+}))
 
-export default usePreviewModal;
+export default usePreviewModal

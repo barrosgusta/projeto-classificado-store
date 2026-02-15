@@ -1,44 +1,45 @@
-import Footer from '@/components/footer'
-import Navbar from '@/components/navbar/navbar'
+import Footer from "@/components/footer"
+import Navbar from "@/components/navbar/navbar"
 
-import './globals.css'
-import type { Metadata } from 'next'
-import { Urbanist } from 'next/font/google'
-import ModalProvider from '@/providers/modal-provider'
-import ToastProvider from '@/providers/toast-provider'
-import { ThemeProvider } from '@/providers/theme-provider'
-import Script from 'next/script'
+import "./globals.css"
+import type { Metadata } from "next"
+import { Inter, Geist, Crimson_Text } from "next/font/google"
+import ModalProvider from "@/providers/modal-provider"
+import { ThemeProvider } from "@/providers/theme-provider"
 
-const font = Urbanist({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+})
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+})
+
+const crimsonText = Crimson_Text({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-crimson",
+})
 
 export const metadata: Metadata = {
-  title: 'Projeto Classificado',
-  description: 'Uma exposição online para entusiastas de carros.',
+  title: "Projeto Classificado",
+  description: "Uma exposição online para entusiastas de carros.",
 }
 
-// Opt out of caching for all data requests in the route segment
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
-    <html lang="en">
-      <Script
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6917025455716510"
-        crossOrigin="anonymous"
-        async
-      />
-      <body className={font.className}>
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-        >
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className={`${geist.variable} ${crimsonText.variable} ${inter.variable} font-sans antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <ModalProvider />
-          <ToastProvider /> 
           <Navbar />
           {children}
           <Footer />

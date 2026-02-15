@@ -1,110 +1,233 @@
 "use client"
 
 import usePreviewModal from "@/hooks/use-preview-modal"
-import { Tab } from "@headlessui/react";
-import GalleyTab from "../gallery/gallery-tab";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
-import IconButton from "@/components/ui/icon-button";
-import { ImageIcon, X } from "lucide-react";
-import NextImage from "next/image";
-// import { Placeholder } from "../ui/placeholder";
+import useImageGestures from "@/hooks/use-image-gestures"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { ArrowLeft, ArrowRight, X } from "lucide-react"
+import NextImage from "next/image"
+import { cn } from "@/lib/utils"
+import { AnimatePresence, motion } from "motion/react"
 
+const slideVariants = {
+  enter: (dir: number) => ({
+    x: dir > 0 ? "100%" : "-100%",
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (dir: number) => ({
+    x: dir > 0 ? "-100%" : "100%",
+    opacity: 0,
+  }),
+}
 
 export default function PreviewImagesModal() {
-    const previewModal = usePreviewModal();
-    const ad = usePreviewModal((state) => state.data);
+  const { isOpen, onClose, data: ad } = usePreviewModal()
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [direction, setDirection] = useState(1)
+  const imageContainerRef = useRef<HTMLDivElement>(null)
 
-    if (!ad) return null;
+  const goNext = useCallback(() => {
+    if (!ad) return
+    setDirection(1)
+    setSelectedIndex((i) => (i + 1) % ad.images.length)
+  }, [ad])
 
-    const handleImageClick = (image: Image) => {
-        window.open(image.url, "_blank");
+  const goPrev = useCallback(() => {
+    if (!ad) return
+    setDirection(-1)
+    setSelectedIndex((i) => (i - 1 + ad.images.length) % ad.images.length)
+  }, [ad])
+
+  const gestures = useImageGestures({
+    onNext: goNext,
+    onPrev: goPrev,
+    onClose,
+  })
+
+  // Reset state when modal closes/opens
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedIndex(0)
+      setDirection(1)
+      gestures.reset()
+      return
     }
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose()
+      if (e.key === "ArrowRight") goNext()
+      if (e.key === "ArrowLeft") goPrev()
+    }
 
-    // const PlaceholderImage = () => (
-    //     <Placeholder className="object-cover object-center w-full h-full max-h-[calc(100vh-30vh)]"/>
-    // )
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [isOpen, onClose, goNext, goPrev])
 
-    return (
-        <Transition show={previewModal.isOpen} appear as={Fragment}>
-            <Dialog as="div" className="relative z-10" onClose={previewModal.onClose}>
-                <div className="fixed inset-0 bg-black backdrop-blur-md bg-opacity-50" />
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : ""
+    return () => { document.body.style.overflow = "" }
+  }, [isOpen])
 
-                <div className="fixed inset-0 overflow-y-auto">
-                    <div className="flex min-h-full items-center justify-center">
-                        <Transition.Child 
-                             
-                            enter="ease-out duration-300" 
-                            enterFrom="opacity-0 scale-95"
-                            enterTo="opacity-100 scale-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100 scale-100"
-                            leaveTo="opacity-0 scale-95"
-                        >
-                            <Dialog.Panel>
+  // Reset zoom on image change
+  useEffect(() => {
+    gestures.resetZoom()
+  }, [selectedIndex])
 
-                            <Tab.Group as="div" className="flex flex-col items-center w-full h-full" >
-                                <Dialog.Panel className="w-fit h-fit xl:max-w-6xl overflow-hidden rounded-lg text-left align-middle p-5 md:p-16">
-                                    {/* <div className="w-96 h-96">
-                                        teste
-                                    </div> */}
-                                    <div className="relative flex w-full items-center overflow-hidden">
-                                        <Tab.Panels>
-                                            {ad.images.map((image) => (
-                                                <Tab.Panel key={image.id}>
-                                                    <div 
-                                                        className="
-                                                            group relative
-                                                            inset-0 overflow-hidden rounded-2xl border backdrop-blur-3xl bg-black/75
-                                                            w-[400px] h-[250px]
-                                                            sm:w-[550px] sm:h-[350px]
-                                                            md:w-[700px] md:h-[525px]
-                                                            lg:w-[912px] lg:h-[684px]                                                            
-                                                        "
-                                                    >
-                                                        
-                                                        <NextImage
-                                                            fill
-                                                            src={image.url}
-                                                            alt="Imagem"
-                                                            className="object-contain object-center transition duration-300 ease-in-out group-hover:scale-105"
-                                                        />
-                                                        <IconButton 
-                                                            icon={<ImageIcon size={20} />}
-                                                            className="opacity-0 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 transition duration-300 ease-in-out group-hover:opacity-100"
-                                                            onClick={() => { handleImageClick(image) } }
-                                                        />
-                                                    </div>
-                                                </Tab.Panel>
-                                            ))}
-                                        </Tab.Panels>                                                            
-                                        <div className="absolute right-4 top-4">
-                                            <IconButton icon={<X size={15} />} onClick={previewModal.onClose} />
-                                        </div>                                    
-                                    </div>
-                                </Dialog.Panel>
-                                <div className="fixed h-fit bottom-0 overflow-y-auto w-full translate-y-10 md:translate-y-4">
-                                    <div className="flex items-center justify-center">
-                                        <Dialog.Panel>
-                                            <ScrollArea className="w-full max-w-sm md:max-w-3xl rounded-lg border backdrop-blur-xl bg-white/75 dark:bg-black/75 p-0">
-                                                <Tab.List className="grid grid-flow-col justify-evenly gap-4 md:gap-8 p-3 md:p-5">
-                                                    {ad.images.map((image) => (
-                                                        <GalleyTab className="h-[45px] lg:h-[50px]"  key={image.id} image={image} />
-                                                    ))}
-                                                </Tab.List>
-                                                <ScrollBar orientation="horizontal" />
-                                            </ScrollArea>
-                                        </Dialog.Panel>
-                                    </div>
-                                </div>
-                            </Tab.Group>
-                            </Dialog.Panel>
-                        </Transition.Child>
-                    </div>
-                </div>
-            </Dialog>
-        </Transition>
-    )
+  const hasMultiple = ad ? ad.images.length > 1 : false
+
+  return (
+    <AnimatePresence>
+      {isOpen && ad && (
+        <motion.div
+          className="fixed inset-0 z-[60] flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+        >
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 backdrop-blur-sm transition-opacity"
+            style={{ backgroundColor: `rgba(0,0,0,${gestures.backdropOpacity})` }}
+            onClick={onClose}
+          />
+
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className={cn(
+              "absolute top-4 right-4 z-10 flex items-center justify-center h-10 w-10 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200",
+              gestures.showControls ? "opacity-100" : "opacity-0 pointer-events-none"
+            )}
+          >
+            <X size={20} className="text-white" />
+          </button>
+
+          {/* Image counter */}
+          {hasMultiple && (
+            <div className={cn(
+              "absolute top-4 left-4 z-10 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-white text-sm font-medium transition-all duration-200",
+              gestures.showControls ? "opacity-100" : "opacity-0"
+            )}>
+              {selectedIndex + 1} / {ad.images.length}
+            </div>
+          )}
+
+          {/* Zoom percentage */}
+          {gestures.scale > 1 && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-white text-xs">
+              {Math.round(gestures.scale * 100)}%
+            </div>
+          )}
+
+          {/* Main image area */}
+          <motion.div
+            ref={imageContainerRef}
+            className="relative w-full h-full max-w-6xl max-h-[75vh] mx-4 my-20 touch-none select-none overflow-hidden"
+            style={gestures.containerStyle}
+            initial={{ scale: 0.96 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.96 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            onTouchStart={gestures.handlers.onTouchStart}
+            onTouchMove={gestures.handlers.onTouchMove}
+            onTouchEnd={gestures.handlers.onTouchEnd}
+          >
+            <AnimatePresence custom={direction} initial={false}>
+              <motion.div
+                key={selectedIndex}
+                className="absolute inset-0"
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: "spring", stiffness: 380, damping: 36, mass: 0.8 },
+                  opacity: { duration: 0.15 },
+                }}
+                style={gestures.imageStyle}
+              >
+                <NextImage
+                  fill
+                  src={ad.images[selectedIndex]?.url}
+                  alt="Imagem"
+                  className="object-contain"
+                  sizes="(max-width: 1280px) 100vw, 1280px"
+                  draggable={false}
+                />
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Navigation arrows (desktop only) */}
+          {hasMultiple && gestures.scale <= 1 && (
+            <>
+              <motion.button
+                onClick={goPrev}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.1 }}
+                className={cn(
+                  "absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center h-12 w-12 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200",
+                  gestures.showControls ? "opacity-100" : "opacity-0 pointer-events-none"
+                )}
+              >
+                <ArrowLeft size={24} className="text-white" />
+              </motion.button>
+              <motion.button
+                onClick={goNext}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.1 }}
+                className={cn(
+                  "absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center h-12 w-12 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200",
+                  gestures.showControls ? "opacity-100" : "opacity-0 pointer-events-none"
+                )}
+              >
+                <ArrowRight size={24} className="text-white" />
+              </motion.button>
+            </>
+          )}
+
+          {/* Thumbnail strip */}
+          {hasMultiple && gestures.scale <= 1 && (
+            <div className={cn(
+              "absolute bottom-8 left-1/2 -translate-x-1/2 z-10 max-w-[90vw] transition-all duration-200",
+              gestures.showControls ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+            )}>
+              <div className="flex items-center gap-2 p-2 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 overflow-x-auto">
+                {ad.images.map((image, index) => (
+                  <button
+                    key={image.id}
+                    onClick={() => {
+                      setDirection(index > selectedIndex ? 1 : -1)
+                      setSelectedIndex(index)
+                      gestures.resetZoom()
+                    }}
+                    className={cn(
+                      "relative shrink-0 h-14 w-14 md:h-16 md:w-16 rounded-xl overflow-hidden transition-all",
+                      selectedIndex === index
+                        ? "ring-2 ring-primary ring-offset-2 ring-offset-black/60 scale-105"
+                        : "opacity-50 hover:opacity-80"
+                    )}
+                  >
+                    <NextImage
+                      fill
+                      src={image.url}
+                      alt=""
+                      className="object-cover"
+                      sizes="64px"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 }
