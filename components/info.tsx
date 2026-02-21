@@ -38,7 +38,7 @@ const specs = (data: CarAd) => [
 
 export default function Info({ data, fipePrice }: InfoProps) {
   const handleWhatsApp = () => {
-    window.location.href = `https://wa.me/55${getNumbersFromString(data.seller.phone)}`
+    window.location.href = `https://wa.me/55${data.seller.phone}`
   }
 
   return (
