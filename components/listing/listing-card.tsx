@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { Expand, GaugeCircle, MapPin } from "lucide-react"
-import { motion, useMotionValue, useSpring, useMotionTemplate } from "motion/react"
+import { motion, useMotionValue, useMotionTemplate } from "motion/react"
 
 import IconButton from "@/components/ui/icon-button"
 import Currency from "@/components/ui/currency"
@@ -23,9 +23,7 @@ export default function ListingCard({ data, index = 0 }: ListingCardProps) {
 
   const mouseX = useMotionValue(-999)
   const mouseY = useMotionValue(-999)
-  const springX = useSpring(mouseX, { stiffness: 300, damping: 30 })
-  const springY = useSpring(mouseY, { stiffness: 300, damping: 30 })
-  const spotlight = useMotionTemplate`radial-gradient(circle 160px at ${springX}px ${springY}px, rgba(255,255,255,0.08), transparent 80%)`
+  const spotlight = useMotionTemplate`radial-gradient(circle 160px at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.08), transparent 80%)`
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -58,18 +56,12 @@ export default function ListingCard({ data, index = 0 }: ListingCardProps) {
   const model = data?.model?.name || data.customModel
 
   return (
-    <motion.div
-      onClick={handleClick}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.08 }}
-      className="relative group cursor-pointer overflow-visible"
-    >
-      {/* Ambient back glow — static blurred image behind the card */}
-      <div className="absolute -inset-6 rounded-3xl opacity-40 blur-3xl saturate-200 pointer-events-none -z-10">
+    <div className="relative">
+      {/* Glow layer — static, no z-index, completely isolated from animations */}
+      <div
+        aria-hidden="true"
+        className="absolute -inset-6 rounded-3xl opacity-40 blur-3xl saturate-200 pointer-events-none [transform:translateZ(0)]"
+      >
         <Image
           src={data?.images?.[0]?.url}
           fill
@@ -79,7 +71,23 @@ export default function ListingCard({ data, index = 0 }: ListingCardProps) {
         />
       </div>
 
-      <div className="relative z-10 rounded-2xl overflow-hidden bg-card border border-border/50 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+      {/* Entrance animation — stagger delay lives here only */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.05 }}
+        className="relative z-10"
+      >
+      {/* Hover animation — completely isolated, no delay ever */}
+      <motion.div
+        onClick={handleClick}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
+        className="group cursor-pointer"
+      >
+      <div className="rounded-2xl overflow-hidden bg-card border border-border/50 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
       <div className="aspect-[16/10] relative">
         <Image
           src={data?.images?.[0]?.url}
@@ -143,6 +151,9 @@ export default function ListingCard({ data, index = 0 }: ListingCardProps) {
         </div>
       </div>
       </div>
-    </motion.div>
+      </motion.div>
+      </motion.div>
+    </div>
   )
+
 }

@@ -33,11 +33,13 @@ export default async function AdPage({ params }: AdPageProps) {
         <div className="flex justify-center w-full">
           <ImageCarousel data={ad} />
         </div>
-        <div className="hidden lg:block gradient-blur top-0 translate-y-60 h-[600px]">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <div
+          className="hidden lg:block absolute bottom-0 left-0 right-0 pointer-events-none"
+          style={{
+            height: "50%",
+            background: "linear-gradient(to top, var(--background) 30%, transparent 100%)"
+          }}
+        />
       </div>
       <Container>
         <div>
