@@ -3,14 +3,9 @@ import Navbar from "@/components/navbar/navbar"
 
 import "./globals.css"
 import type { Metadata } from "next"
-import { Inter, Geist, Crimson_Text } from "next/font/google"
+import { Geist, Crimson_Text } from "next/font/google"
 import ModalProvider from "@/providers/modal-provider"
 import { ThemeProvider } from "@/providers/theme-provider"
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-})
 
 const geist = Geist({
   subsets: ["latin"],
@@ -37,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${geist.variable} ${crimsonText.variable} ${inter.variable} font-sans antialiased`}>
+      <body className={`${geist.variable} ${crimsonText.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <ModalProvider />
           <Navbar />

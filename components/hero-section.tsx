@@ -9,10 +9,10 @@ export default function HeroSection() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="relative w-full py-16 sm:py-24 overflow-hidden"
+      className="relative w-full py-16 sm:py-24"
     >
       {/* Gradient background accent */}
-      <div className="absolute inset-0 -z-10 opacity-40 dark:opacity-20">
+      <div className="absolute inset-0 -z-10 opacity-40 dark:opacity-40">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
       </div>
 
@@ -28,7 +28,7 @@ export default function HeroSection() {
             <p className="text-sm font-semibold tracking-widest uppercase text-primary/80">
               Showroom para entusiastas
             </p>
-            <h1 className="font-crimson text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
               Máquinas que merecem ser vistas
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
